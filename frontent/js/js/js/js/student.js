@@ -1,5 +1,5 @@
 
-const API_URL = "http://localhost:5000/api/students";
+const API_URL = "https://smartlib-7.onrender.com/api/students";
 
 let students = [];
 let editingStudentId = null;
