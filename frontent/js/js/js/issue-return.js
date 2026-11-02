@@ -1,5 +1,5 @@
 
-const IR_API = "http://localhost:5000/api";
+const IR_API = "https://smartlib-7.onrender.com/api/students";
 
 let irStudents = [];
 let irBooks = [];
