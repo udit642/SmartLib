@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+    <div class="auth-container">
+
+
+        <!-- LEFT -->
+
+        <div class="auth-left">
+
+            <div class="auth-logo">
+                ðŸ“š SmartLib
+            </div>
+
+            <h1>
+                Join SmartLib
+            </h1>
+
+            <p>
+                Create your student account and start
+                exploring thousands of books.
+            </p>
+
+            <div class="auth-icon">
+                ðŸŽ“
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="auth-right">
+
+            <div class="auth-box register-box">
+
+                <h2>
+                    Create Account
+                </h2>
+
+                <p class="auth-subtitle">
+                    Register as a library student
+                </p>
+
+
+                <form id="registerForm">
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label for="studentName">
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="studentName"
+                            placeholder="Enter your full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- STUDENT ID -->
+
+                    <div class="form-group">
+
+                        <label for="studentId">
+                            Student ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="studentId"
+                            placeholder="Enter student ID"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="studentEmail">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            id="studentEmail"
+                            placeholder="Enter email address"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- COURSE -->
+
+                    <div class="form-group">
+
+                        <label for="course">
+                            Course
+                        </label>
+
+                        <select id="course">
+
+                            <option value="">
+                                Select Course
+                            </option>
+
+                            <option value="B.Tech CSE">
+                                B.Tech CSE
+                            </option>
+
+                            <option value="B.Tech IT">
+                                B.Tech IT
+                            </option>
+
+                            <option value="BCA">
+                                BCA
+                            </option>
+
+                            <option value="MCA">
+                                MCA
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="registerPassword">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            placeholder="Create password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- TERMS -->
+
+                    <div class="terms">
+
+                        <label>
+
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required
+                            >
+
+                            I agree to the library terms
+                            and conditions.
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- REGISTER BUTTON -->
+
+                    <button
+                        type="submit"
+                        class="btn primary-btn full-btn"
+                    >
+                        Create Account
+                    </button>
+
+
+                </form>
+
+
+                <p class="register-text">
+
+                    Already have an account?
+
+                    <a href="login.html">
+                        Login Here
+                    </a>
+
+                </p>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const registerForm = document.getElementById("registerForm");
+
+    if (!registerForm) return;
+
+    registerForm.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const studentId = document.getElementById("studentId").value.trim();
+        const email = document.getElementById("studentEmail").value.trim().toLowerCase();
+        const password = document.getElementById("registerPassword").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Password and Confirm Password do not match!");
+            return;
+        }
+
+        try {
+
+            const response = await fetch("http://localhost:5000/api/students/activate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    email: email,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                alert(result.message || "Account activation failed!");
+                return;
+            }
+
+            alert("Account activated successfully! Please login.");
+
+            window.location.href = "./login.html";
+
+        } catch (error) {
+
+            console.error("Account Activation Error:", error);
+
+            alert("Backend connection failed! Please start SmartLib backend.");
+
+        }
+
+    });
+
+});
+</script>
+
+
+</body>
+
+</html>

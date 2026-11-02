@@ -1,0 +1,1024 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+
+    <title>Admin Dashboard - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        /* AI ASSISTANT */
+
+        .ai-float-btn {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            font-size: 27px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(79,70,229,.3);
+            transition: .3s;
+        }
+
+        .ai-float-btn:hover {
+            transform: translateY(-4px);
+        }
+
+        .ai-pulse {
+            position: absolute;
+            width: 11px;
+            height: 11px;
+            background: #22c55e;
+            border: 2px solid white;
+            border-radius: 50%;
+            right: 4px;
+            top: 4px;
+        }
+
+        .ai-chat-window {
+            position: fixed;
+            right: 25px;
+            bottom: 100px;
+            width: 370px;
+            max-width: calc(100% - 30px);
+            height: 520px;
+            max-height: 75vh;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 20px 60px rgba(15,23,42,.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: .3s;
+            z-index: 9998;
+        }
+
+        .ai-chat-window.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .ai-header {
+            padding: 15px;
+            background: linear-gradient(135deg,#4f46e5,#7c3aed);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ai-header-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .ai-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .ai-header small {
+            color: #e0e7ff;
+        }
+
+        .ai-close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .ai-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8fafc;
+        }
+
+        .ai-message {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .message-avatar {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ede9fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message-content {
+            max-width: 85%;
+            background: white;
+            padding: 10px 13px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        }
+
+        .message-content p {
+            margin: 0 0 7px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #374151;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .user-message .message-content {
+            background: #4f46e5;
+        }
+
+        .user-message .message-content p {
+            color: white;
+        }
+
+        .message-time {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        .ai-quick-questions {
+            display: flex;
+            gap: 7px;
+            padding: 10px;
+            overflow-x: auto;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .ai-quick-questions button {
+            flex-shrink: 0;
+            padding: 7px 11px;
+            border: 1px solid #ddd6fe;
+            border-radius: 20px;
+            background: #f5f3ff;
+            color: #4f46e5;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .ai-input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .ai-input-area input {
+            flex: 1;
+            min-width: 0;
+            padding: 11px 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .ai-send-btn {
+            width: 42px;
+            height: 42px;
+            border: none;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        @media(max-width:600px) {
+            .ai-chat-window {
+                right: 10px;
+                bottom: 85px;
+                width: calc(100% - 20px);
+                height: 70vh;
+            }
+
+            .ai-float-btn {
+                right: 15px;
+                bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <span>📚</span>
+            <h2>SmartLib</h2>
+        </div>
+
+        <div class="user-mini">
+            <div class="user-avatar">👨‍💼</div>
+            <div>
+                <strong>Librarian</strong>
+                <small>Administrator</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="admin-dashboard.html" class="sidebar-link active">
+                📊 <span>Dashboard</span>
+            </a>
+
+            <a href="manage-books.html" class="sidebar-link">
+                📚 <span>Manage Books</span>
+            </a>
+
+            <a href="manage-students.html" class="sidebar-link">
+                👨‍🎓 <span>Manage Students</span>
+            </a>
+
+            <a href="#issue-management" class="sidebar-link">
+                🔄 <span>Issue & Return</span>
+            </a>
+
+            <a href="#reports" class="sidebar-link">
+                📈 <span>Reports</span>
+            </a>
+
+            <a href="#settings" class="sidebar-link">
+                ⚙️ <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="login.html" class="sidebar-link logout-link">
+                🚪 <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- TOPBAR -->
+        <header class="dashboard-topbar">
+
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>Manage your library from one place.</p>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="notification-btn" type="button">
+                    🔔 <span>5</span>
+                </button>
+
+                <div class="profile-circle">👨‍💼</div>
+            </div>
+
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div>
+                    <span>Total Books</span>
+                    <h2 id="totalBooks">2540</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">👨‍🎓</div>
+                <div>
+                    <span>Total Students</span>
+                    <h2 id="totalStudents">1250</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📖</div>
+                <div>
+                    <span>Books Issued</span>
+                    <h2 id="adminIssued">486</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div>
+                    <span>Total Fine</span>
+                    <h2>₹8,450</h2>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- DASHBOARD GRID -->
+        <section class="dashboard-grid">
+
+            <div class="dashboard-card large-card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Recent Transactions</h2>
+                        <p>Latest library activities</p>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Rahul Kumar</td>
+                                <td>Java Programming</td>
+                                <td>17 Sep 2026</td>
+                                <td><span class="status active-status">Issued</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>Anjali Singh</td>
+                                <td>Database Management</td>
+                                <td>16 Sep 2026</td>
+                                <td><span class="status return-status">Returned</span></td>
+                            </tr>
+
+                            <tr>
+                                <td>Aman Verma</td>
+                                <td>Computer Networks</td>
+                                <td>15 Sep 2026</td>
+                                <td><span class="status active-status">Issued</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Quick Actions</h2>
+                    </div>
+                </div>
+
+                <div class="admin-actions">
+
+                    <a href="manage-books.html" class="admin-action">
+                        📚
+                        <div>
+                            <strong>Add New Book</strong>
+                            <p>Add book to library</p>
+                        </div>
+                    </a>
+
+                    <a href="manage-students.html" class="admin-action">
+                        👨‍🎓
+                        <div>
+                            <strong>Add Student</strong>
+                            <p>Register new student</p>
+                        </div>
+                    </a>
+
+                    <a href="#reports" class="admin-action">
+                        📊
+                        <div>
+                            <strong>View Reports</strong>
+                            <p>Library statistics</p>
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OVERDUE BOOKS -->
+        <section class="dashboard-card full-width-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>Overdue Books</h2>
+                    <p>Books that have crossed their due date.</p>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Book</th>
+                            <th>Due Date</th>
+                            <th>Days Late</th>
+                            <th>Fine</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>Rohan Singh</td>
+                            <td>Data Structures</td>
+                            <td>10 Sep 2026</td>
+                            <td>7 Days</td>
+                            <td>₹70</td>
+                        </tr>
+
+                        <tr>
+                            <td>Priya Sharma</td>
+                            <td>Operating Systems</td>
+                            <td>12 Sep 2026</td>
+                            <td>5 Days</td>
+                            <td>₹50</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+
+        <!-- ISSUE AND RETURN MANAGEMENT -->
+        <section id="issue-management" class="ir-section">
+
+            <div class="ir-heading">
+                <div>
+                    <h2>Issue & Return Management</h2>
+                    <p>Manage book borrowing, returns and library fines.</p>
+                </div>
+
+                <button type="button" id="irRefresh" class="ir-refresh">
+                    ↻ Refresh Data
+                </button>
+            </div>
+
+            <div id="irMessage" class="ir-message" style="display:none"></div>
+
+            <div class="ir-stats">
+
+                <div class="ir-stat-card">
+                    <span>Currently Issued</span>
+                    <h2 id="irTotalIssued">0</h2>
+                </div>
+
+                <div class="ir-stat-card">
+                    <span>Overdue Books</span>
+                    <h2 id="irOverdue">0</h2>
+                </div>
+
+                <div class="ir-stat-card">
+                    <span>Returned Books</span>
+                    <h2 id="irTotalReturned">0</h2>
+                </div>
+
+                <div class="ir-stat-card">
+                    <span>Total Collected Fine</span>
+                    <h2 id="irFine">₹0</h2>
+                </div>
+
+            </div>
+
+
+            <!-- ISSUE BOOK FORM -->
+            <div class="ir-card">
+
+                <h3>Issue a New Book</h3>
+                <p>Select a student and an available book.</p>
+
+                <form id="irIssueForm">
+
+                    <div class="ir-form-grid">
+
+                        <div>
+                            <label for="irStudent">Select Student</label>
+                            <select id="irStudent" required>
+                                <option value="">Loading students...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="irBook">Select Book</label>
+                            <select id="irBook" required>
+                                <option value="">Loading books...</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="irDueDate">Due Date</label>
+                            <input type="date" id="irDueDate" required>
+                        </div>
+
+                    </div>
+
+                    <button type="submit" class="ir-issue-btn">
+                        + Issue Book
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- TRANSACTION TABLE -->
+            <div class="ir-card">
+
+                <div class="ir-table-heading">
+                    <div>
+                        <h3>Book Transactions</h3>
+                        <p>View issued and returned books.</p>
+                    </div>
+
+                    <select id="irStatusFilter">
+                        <option value="All">All Records</option>
+                        <option value="Issued">Issued</option>
+                        <option value="Returned">Returned</option>
+                    </select>
+                </div>
+
+                <div class="ir-table-wrapper">
+                    <table class="ir-table">
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Fine</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="irIssuesTable">
+                            <tr>
+                                <td colspan="7">Loading records...</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORTS SECTION -->
+<section id="reports" class="dashboard-card full-width-card">
+
+    <div class="card-header">
+        <div>
+            <h2>Library Reports & Analytics</h2>
+            <p>Generate and download library performance reports.</p>
+        </div>
+        <button type="button" id="reportRefresh">Refresh Reports</button>
+    </div>
+
+    <div id="reportMessage"></div>
+
+    <div class="report-filters">
+        <div>
+            <label for="reportType">Report Type</label>
+            <select id="reportType">
+                <option value="all">All Reports</option>
+                <option value="issued">Issued Books</option>
+                <option value="returned">Returned Books</option>
+                <option value="overdue">Overdue Books</option>
+                <option value="fine">Fine Report</option>
+                <option value="students">Student Activity</option>
+                <option value="books">Book Availability</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="reportStartDate">Start Date</label>
+            <input type="date" id="reportStartDate">
+        </div>
+
+        <div>
+            <label for="reportEndDate">End Date</label>
+            <input type="date" id="reportEndDate">
+        </div>
+
+        <button type="button" id="generateReport">Generate Report</button>
+    </div>
+
+    <div class="report-stats">
+
+        <div class="stat-card">
+            <h3>Total Books</h3>
+            <h2 id="reportTotalBooks">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Students</h3>
+            <h2 id="reportTotalStudents">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Issues</h3>
+            <h2 id="reportTotalIssues">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Currently Issued</h3>
+            <h2 id="reportActiveIssues">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Returned Books</h3>
+            <h2 id="reportReturnedIssues">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Overdue Books</h3>
+            <h2 id="reportOverdueIssues">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <h3>Total Fine</h3>
+            <h2 id="reportTotalFine">₹0</h2>
+        </div>
+
+    </div>
+
+    <div class="card-header">
+        <div>
+            <h2 id="reportTableTitle">Report Details</h2>
+            <p>Records fetched from the library database.</p>
+        </div>
+
+        <div>
+            <button type="button" id="exportReportCSV">Export CSV</button>
+            <button type="button" id="exportReportPDF">Print / Save PDF</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead id="reportTableHead">
+                <tr>
+                    <th>Student</th>
+                    <th>Book</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                </tr>
+            </thead>
+
+            <tbody id="reportTableBody">
+                <tr>
+                    <td colspan="7">Click Generate Report to view records.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+<section id="settings" class="dashboard-card full-width-card">
+            <div class="card-header">
+                <div>
+                    <h2>Settings</h2>
+                    <p>Library system settings.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- AI FLOATING BUTTON -->
+    <button
+        class="ai-float-btn"
+        id="aiFloatBtn"
+        type="button"
+        onclick="toggleAIAssistant()"
+        title="SmartLib AI Assistant">
+
+        🤖
+        <span class="ai-pulse"></span>
+    </button>
+
+
+    <!-- AI CHAT WINDOW -->
+    <div class="ai-chat-window" id="aiChatWindow">
+
+        <div class="ai-header">
+
+            <div class="ai-header-info">
+                <div class="ai-avatar">🤖</div>
+
+                <div>
+                    <h3>SmartLib AI</h3>
+                    <small>● Online · Library Assistant</small>
+                </div>
+            </div>
+
+            <button
+                class="ai-close-btn"
+                type="button"
+                onclick="toggleAIAssistant()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="ai-messages" id="aiMessages">
+
+            <div class="ai-message bot-message">
+
+                <div class="message-avatar">🤖</div>
+
+                <div class="message-content">
+                    <p>Hello! 👋 I'm <strong>SmartLib AI</strong>.</p>
+                    <p>Ask me about books, students, issue and return, fines or library management.</p>
+                    <span class="message-time">Just now</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-quick-questions">
+
+            <button type="button" onclick="askAI('How can I issue a book?')">
+                📖 Issue
+            </button>
+
+            <button type="button" onclick="askAI('How can I return a book?')">
+                ↩ Return
+            </button>
+
+            <button type="button" onclick="askAI('How can I add a book?')">
+                📚 Add Book
+            </button>
+
+            <button type="button" onclick="askAI('How can I manage students?')">
+                👨‍🎓 Students
+            </button>
+
+            <button type="button" onclick="askAI('Show dashboard statistics')">
+                📊 Statistics
+            </button>
+
+        </div>
+
+
+        <div class="ai-input-area">
+
+            <input
+                type="text"
+                id="aiInput"
+                placeholder="Ask SmartLib AI anything..."
+                autocomplete="off">
+
+            <button
+                type="button"
+                onclick="sendAIMessage()"
+                class="ai-send-btn">
+                ➤
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROJECT JAVASCRIPT -->
+    <script src="js/js/js/js/admin.js"></script>
+    <script src="js/js/js/js/app.js"></script>
+    <script src="js/js/js/issue-return.js"></script>
+
+
+    <!-- AI ASSISTANT JAVASCRIPT -->
+    <script>
+        let aiOpen = false;
+
+        function toggleAIAssistant() {
+            const chat = document.getElementById("aiChatWindow");
+            const button = document.getElementById("aiFloatBtn");
+
+            aiOpen = !aiOpen;
+
+            chat.classList.toggle("show", aiOpen);
+            button.classList.toggle("active", aiOpen);
+
+            if (aiOpen) {
+                setTimeout(() => {
+                    document.getElementById("aiInput").focus();
+                }, 200);
+            }
+        }
+
+
+        function escapeAIText(text) {
+            return String(text).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            })[char]);
+        }
+
+
+        function addUserMessage(message) {
+            const container = document.getElementById("aiMessages");
+            const messageDiv = document.createElement("div");
+
+            messageDiv.className = "ai-message user-message";
+
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <p>${escapeAIText(message)}</p>
+                    <span class="message-time">Just now</span>
+                </div>
+                <div class="message-avatar">👨‍💼</div>
+            `;
+
+            container.appendChild(messageDiv);
+            scrollAIChat();
+        }
+
+
+        function addBotMessage(message) {
+            const container = document.getElementById("aiMessages");
+            const messageDiv = document.createElement("div");
+
+            messageDiv.className = "ai-message bot-message";
+
+            messageDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>${message}</p>
+                    <span class="message-time">Just now</span>
+                </div>
+            `;
+
+            container.appendChild(messageDiv);
+            scrollAIChat();
+        }
+
+
+        function scrollAIChat() {
+            const container = document.getElementById("aiMessages");
+            container.scrollTop = container.scrollHeight;
+        }
+
+
+        function generateAIAnswer(question) {
+            const q = question.toLowerCase();
+
+            if (
+                q.includes("hello") ||
+                q.includes("hi") ||
+                q.includes("hey") ||
+                q.includes("namaste")
+            ) {
+                return "Hello! 👋 Welcome to SmartLib. How can I help you today?";
+            }
+
+            if (q.includes("issue") || q.includes("borrow")) {
+                return "📖 To issue a book:<br>1. Open Issue & Return Management.<br>2. Select a student.<br>3. Select an available book.<br>4. Choose the due date.<br>5. Click Issue Book.";
+            }
+
+            if (q.includes("return")) {
+                return "↩ To return a book, go to the Book Transactions table and use the Return action for the required issued book.";
+            }
+
+            if (q.includes("add") && q.includes("book")) {
+                return "📚 Open Manage Books from the sidebar. Then select Add New Book, enter the details and save.";
+            }
+
+            if (q.includes("student")) {
+                return "👨‍🎓 Open Manage Students from the sidebar to add, view, edit or remove student records.";
+            }
+
+            if (q.includes("fine") || q.includes("overdue")) {
+                return "💰 You can check overdue books and fine details in the Overdue Books and Issue & Return sections.";
+            }
+
+            if (q.includes("book") && (q.includes("search") || q.includes("find"))) {
+                return "🔎 Open Manage Books and use the search option to find books by title, author or category.";
+            }
+
+            if (q.includes("statistics") || q.includes("dashboard") || q.includes("total")) {
+                const books = document.getElementById("totalBooks")?.textContent || "N/A";
+                const students = document.getElementById("totalStudents")?.textContent || "N/A";
+                const issued = document.getElementById("adminIssued")?.textContent || "N/A";
+
+                return `📊 Dashboard figures:<br>Total Books: <strong>${escapeAIText(books)}</strong><br>Total Students: <strong>${escapeAIText(students)}</strong><br>Books Issued: <strong>${escapeAIText(issued)}</strong>`;
+            }
+
+            if (q.includes("logout")) {
+                return "🚪 Click the Logout option at the bottom of the sidebar to leave the dashboard.";
+            }
+
+            if (q.includes("thank")) {
+                return "😊 You're welcome! I'm always ready to help with SmartLib.";
+            }
+
+            return "🤖 I can help you with books, students, issue and return, fines, dashboard statistics and library management. Please ask me about one of these topics.";
+        }
+
+
+        function sendAIMessage() {
+            const input = document.getElementById("aiInput");
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            addUserMessage(question);
+            input.value = "";
+
+            const answer = generateAIAnswer(question);
+
+            setTimeout(() => {
+                addBotMessage(answer);
+            }, 350);
+        }
+
+
+        function askAI(question) {
+            document.getElementById("aiInput").value = question;
+            sendAIMessage();
+        }
+
+
+        document.getElementById("aiInput").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendAIMessage();
+            }
+        });
+    </script>
+
+    <script src="js/reports.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,376 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Students - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .student-actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .student-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .student-modal-content {
+            background: white;
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            border-radius: 14px;
+        }
+
+        .student-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .student-modal-header button {
+            border: none;
+            background: transparent;
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .student-form-group {
+            margin-bottom: 15px;
+        }
+
+        .student-form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .student-form-group input,
+        .student-form-group select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+            outline: none;
+        }
+
+        .student-form-group input:focus,
+        .student-form-group select:focus {
+            border-color: #5b5bd6;
+        }
+
+        .student-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .student-modal-actions button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .student-save-btn {
+            background: #5b5bd6;
+            color: white;
+        }
+
+        .student-cancel-btn {
+            background: #eee;
+            color: #333;
+        }
+
+        .add-student-btn {
+            padding: 11px 17px;
+            border: none;
+            border-radius: 7px;
+            background: #5b5bd6;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .add-student-btn:hover {
+            background: #4545b8;
+        }
+
+        .student-message {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .student-count {
+            font-size: 14px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        @media(max-width: 600px) {
+            .card-header {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .add-student-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <span>📚</span>
+            <h2>SmartLib</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="admin-dashboard.html" class="sidebar-link">
+                📊 <span>Dashboard</span>
+            </a>
+
+            <a href="manage-books.html" class="sidebar-link">
+                📚 <span>Manage Books</span>
+            </a>
+
+            <a href="manage-students.html" class="sidebar-link active">
+                👨‍🎓 <span>Manage Students</span>
+            </a>
+
+            <a href="#issue" class="sidebar-link">
+                🔄 <span>Issue & Return</span>
+            </a>
+
+            <a href="#reports" class="sidebar-link">
+                📈 <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="index.html" class="sidebar-link" id="logoutBtn">
+                🚪 <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <header class="dashboard-topbar">
+            <div>
+                <h1>Manage Students</h1>
+                <p>View and manage registered library students.</p>
+            </div>
+        </header>
+
+        <!-- SEARCH -->
+        <section class="book-search-section">
+
+            <div class="search-box">
+                <span>🔍</span>
+
+                <input
+                    type="text"
+                    id="studentSearch"
+                    placeholder="Search by student name, ID or email..."
+                >
+            </div>
+
+        </section>
+
+        <!-- STUDENTS TABLE -->
+        <section class="dashboard-card full-width-card">
+
+            <div class="card-header">
+
+                <div>
+                    <h2>Registered Students</h2>
+                    <p>Manage all registered library students.</p>
+                    <p class="student-count">
+                        Total Students: <strong id="studentCount">0</strong>
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="add-student-btn"
+                    id="addStudentBtn"
+                >
+                    + Add New Student
+                </button>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Books Issued</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="studentsTable">
+
+                        <tr>
+                            <td colspan="7">Loading students...</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ADD / EDIT STUDENT MODAL -->
+    <div class="student-modal" id="studentModal">
+
+        <div class="student-modal-content">
+
+            <div class="student-modal-header">
+                <h2 id="studentModalTitle">Add New Student</h2>
+
+                <button
+                    type="button"
+                    id="closeStudentModal"
+                    aria-label="Close"
+                >
+                    &times;
+                </button>
+            </div>
+
+            <form id="studentForm">
+
+                <div class="student-form-group">
+                    <label for="studentId">Student ID</label>
+                    <input
+                        type="text"
+                        id="studentId"
+                        placeholder="Example: STU004"
+                        required
+                    >
+                </div>
+
+                <div class="student-form-group">
+                    <label for="studentName">Full Name</label>
+                    <input
+                        type="text"
+                        id="studentName"
+                        placeholder="Enter student name"
+                        required
+                    >
+                </div>
+
+                <div class="student-form-group">
+                    <label for="studentEmail">Email Address</label>
+                    <input
+                        type="email"
+                        id="studentEmail"
+                        placeholder="student@example.com"
+                        required
+                    >
+                </div>
+
+                <div class="student-form-group">
+                    <label for="studentCourse">Course</label>
+                    <input
+                        type="text"
+                        id="studentCourse"
+                        placeholder="B.Tech CSE"
+                        required
+                    >
+                </div>
+
+                <div class="student-form-group">
+                    <label for="studentBooks">Books Issued</label>
+                    <input
+                        type="number"
+                        id="studentBooks"
+                        value="0"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div class="student-form-group">
+                    <label for="studentStatus">Student Status</label>
+                    <select id="studentStatus">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="student-modal-actions">
+
+                    <button
+                        type="button"
+                        class="student-cancel-btn"
+                        id="cancelStudentBtn"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="student-save-btn"
+                        id="saveStudentBtn"
+                    >
+                        Save Student
+                    </button>
+
+                </div>
+
+                <p class="student-message" id="studentMessage"></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/js/js/js/app.js"></script>
+    <script src="js/js/js/js/student.js"></script>
+
+</body>
+</html>

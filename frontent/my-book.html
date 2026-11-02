@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Books - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <span>📚</span>
+
+            <h2>SmartLib</h2>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="student-dashboard.html"
+               class="sidebar-link">
+
+                🏠
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="books.html"
+               class="sidebar-link">
+
+                📚
+                <span>Browse Books</span>
+
+            </a>
+
+
+            <a href="my-books.html"
+               class="sidebar-link active">
+
+                📖
+                <span>My Books</span>
+
+            </a>
+
+
+            <a href="#history"
+               class="sidebar-link">
+
+                🕘
+                <span>History</span>
+
+            </a>
+
+
+            <a href="#profile"
+               class="sidebar-link">
+
+                👤
+                <span>Profile</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="index.html"
+               class="sidebar-link">
+
+                🚪
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="dashboard-main">
+
+
+        <header class="dashboard-topbar">
+
+            <div>
+
+                <h1>
+                    My Books
+                </h1>
+
+                <p>
+                    Manage your issued library books.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- SUMMARY -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <span>Currently Issued</span>
+
+                    <h2>
+                        4
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⏰
+                </div>
+
+                <div>
+
+                    <span>Due Soon</span>
+
+                    <h2>
+                        1
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ⚠️
+                </div>
+
+                <div>
+
+                    <span>Overdue</span>
+
+                    <h2>
+                        0
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    💰
+                </div>
+
+                <div>
+
+                    <span>Current Fine</span>
+
+                    <h2>
+                        ₹50
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- BOOK TABLE -->
+
+        <section class="dashboard-card full-width-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Issued Books
+                    </h2>
+
+                    <p>
+                        List of books currently issued to you.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Book Name</th>
+                            <th>Issue Date</th>
+                            <th>Due Date</th>
+                            <th>Fine</th>
+                            <th>Status</th>
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="myBooksTable">
+
+
+                        <tr>
+
+                            <td>
+                                Java Programming
+                            </td>
+
+                            <td>
+                                10 Sep 2026
+                            </td>
+
+                            <td>
+                                24 Sep 2026
+                            </td>
+
+                            <td>
+                                ₹0
+                            </td>
+
+                            <td>
+
+                                <span class="status active-status">
+                                    Active
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="small-btn return-btn"
+                                >
+                                    Return
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Database Management
+                            </td>
+
+                            <td>
+                                05 Sep 2026
+                            </td>
+
+                            <td>
+                                19 Sep 2026
+                            </td>
+
+                            <td>
+                                ₹50
+                            </td>
+
+                            <td>
+
+                                <span class="status warning-status">
+                                    Due Soon
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="small-btn return-btn"
+                                >
+                                    Return
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- BORROWING HISTORY -->
+
+        <section class="dashboard-card full-width-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Borrowing History
+                    </h2>
+
+                    <p>
+                        Your previous book transactions.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Book</th>
+                            <th>Issue Date</th>
+                            <th>Return Date</th>
+                            <th>Fine</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                Operating Systems
+                            </td>
+
+                            <td>
+                                01 Aug 2026
+                            </td>
+
+                            <td>
+                                12 Aug 2026
+                            </td>
+
+                            <td>
+                                ₹0
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Computer Networks
+                            </td>
+
+                            <td>
+                                10 Jul 2026
+                            </td>
+
+                            <td>
+                                24 Jul 2026
+                            </td>
+
+                            <td>
+                                ₹20
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="js/js/student.js"></script>
+    <script src="js/js/admin.js"></script>
+    <script src="js/js/student.js"></script>
+    <script src="js/js/app.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+<div class="auth-container">
+
+
+    <!-- LEFT SIDE -->
+
+    <div class="auth-left">
+
+        <div class="auth-logo">
+            📚 SmartLib
+        </div>
+
+        <h1>
+            Welcome Back!
+        </h1>
+
+        <p>
+            Login to access your Smart Library account
+            and manage your books.
+        </p>
+
+        <div class="auth-icon">
+            📖
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT SIDE -->
+
+    <div class="auth-right">
+
+        <div class="auth-box">
+
+            <h2>
+                Login to SmartLib
+            </h2>
+
+            <p class="auth-subtitle">
+                Enter your account details
+            </p>
+
+
+            <form id="loginForm">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ROLE -->
+
+                <div class="form-group">
+
+                    <label for="loginRole">
+                        Login As
+                    </label>
+
+                    <select id="loginRole">
+
+                        <option value="student">
+                            Student
+                        </option>
+
+                        <option value="admin">
+                            Librarian / Admin
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- REMEMBER -->
+
+                <div class="form-options">
+
+                    <label>
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        Remember Me
+
+                    </label>
+
+                    <a href="#">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <button
+                    type="submit"
+                    class="btn primary-btn full-btn"
+                >
+                    Login
+                </button>
+
+
+            </form>
+
+
+            <!-- REGISTER -->
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="register.html">
+                    Create Account
+                </a>
+
+            </p>
+
+
+            <!-- BACK -->
+
+            <a
+                href="index.html"
+                class="back-home"
+            >
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    console.log("SmartLib Login Page Loaded");
+
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+
+    loginForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+
+        // Get values
+
+        const email =
+            document.getElementById("loginEmail")
+            .value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+            document.getElementById("loginPassword")
+            .value
+            .trim();
+
+
+        const role =
+            document.getElementById("loginRole")
+            .value;
+
+
+        const rememberMe =
+            document.getElementById("rememberMe").checked;
+
+
+        console.log("Email:", email);
+        console.log("Role:", role);
+
+
+        /* =========================================
+           ADMIN LOGIN
+           ========================================= */
+
+        if (role === "admin") {
+
+            /*
+               ADMIN LOGIN DETAILS
+               Email: admin@smartlib.com
+               Password: admin123
+            */
+
+            if (
+                email === "admin@smartlib.com" &&
+                password === "admin123"
+            ) {
+
+                localStorage.setItem(
+                    "adminLoggedIn",
+                    "true"
+                );
+
+
+                localStorage.setItem(
+                    "smartLibCurrentUser",
+                    JSON.stringify({
+                        name: "Library Admin",
+                        email: email,
+                        role: "admin"
+                    })
+                );
+
+
+                if (rememberMe) {
+
+                    localStorage.setItem(
+                        "smartLibRemember",
+                        "true"
+                    );
+
+                }
+
+
+                alert("Admin Login Successful!");
+
+
+                /*
+                   IMPORTANT:
+                   admin-dashboard.html must exist
+                */
+
+                window.location.href =
+                    "./admin-dashboard.html";
+
+
+                return;
+
+            } else {
+
+                alert(
+                    "Invalid Admin Email or Password!\n\n" +
+                    "Email: admin@smartlib.com\n" +
+                    "Password: admin123"
+                );
+
+                return;
+            }
+
+        }
+
+
+        /* =========================================
+           STUDENT LOGIN
+           ========================================= */
+
+        if (role === "student") {
+
+
+            const students =
+                JSON.parse(
+                    localStorage.getItem("students")
+                ) || [];
+
+
+            /*
+               Find registered student
+            */
+
+            const student =
+                students.find(function (user) {
+
+                    return (
+                        user.email &&
+                        user.email.toLowerCase() === email &&
+                        user.password === password
+                    );
+
+                });
+
+
+            if (student) {
+
+
+                localStorage.setItem(
+                    "smartLibCurrentUser",
+                    JSON.stringify(student)
+                );
+
+
+                localStorage.setItem(
+                    "studentLoggedIn",
+                    "true"
+                );
+
+
+                if (rememberMe) {
+
+                    localStorage.setItem(
+                        "smartLibRemember",
+                        "true"
+                    );
+
+                }
+
+
+                alert(
+                    "Student Login Successful!"
+                );
+
+
+                window.location.href =
+                    "./student-dashboard.html";
+
+
+                return;
+
+            }
+
+
+            /*
+               If no registered student found
+            */
+
+            alert(
+                "Invalid Student Email or Password!"
+            );
+
+            return;
+
+        }
+
+    });
+
+});
+
+</script>
+
+
+</body>
+
+</html>

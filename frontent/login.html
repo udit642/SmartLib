@@ -1,0 +1,300 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+    <div class="auth-left">
+
+        <div class="auth-logo">
+            📚 SmartLib
+        </div>
+
+        <h1>Welcome Back!</h1>
+
+        <p>
+            Login to access your Smart Library account
+            and manage your books.
+        </p>
+
+        <div class="auth-icon">📖</div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="auth-right">
+
+        <div class="auth-box">
+
+            <h2>Login to SmartLib</h2>
+
+            <p class="auth-subtitle">
+                Enter your account details
+            </p>
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+                <div class="form-group">
+
+                    <label for="loginEmail">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="form-group">
+
+                    <label for="loginPassword">Password</label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+                <!-- ROLE -->
+                <div class="form-group">
+
+                    <label for="loginRole">Login As</label>
+
+                    <select id="loginRole" required>
+
+                        <option value="student">Student</option>
+
+                        <option value="admin">
+                            Librarian / Admin
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- REMEMBER -->
+                <div class="form-options">
+
+                    <label>
+                        <input type="checkbox" id="rememberMe">
+                        Remember Me
+                    </label>
+
+                    <a href="#">Forgot Password?</a>
+
+                </div>
+
+                <!-- BUTTON -->
+                <button
+                    type="submit"
+                    id="loginButton"
+                    class="btn primary-btn full-btn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <!-- REGISTER -->
+            <p class="register-text">
+                Don't have an account?
+                <a href="register.html">Create Account</a>
+            </p>
+
+            <!-- BACK -->
+            <a href="index.html" class="back-home">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const loginForm = document.getElementById("loginForm");
+
+    const loginButton = document.getElementById("loginButton");
+
+    loginForm.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const email = document.getElementById("loginEmail")
+            .value.trim().toLowerCase();
+
+        const password = document.getElementById("loginPassword").value;
+
+        const role = document.getElementById("loginRole").value;
+
+        const rememberMe = document.getElementById("rememberMe").checked;
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Please Wait...";
+
+        try {
+
+            // =================================
+            // ADMIN LOGIN
+            // =================================
+
+            if (role === "admin") {
+
+                if (
+                    email === "admin@smartlib.com" &&
+                    password === "admin123"
+                ) {
+
+                    const adminData = {
+                        name: "Library Admin",
+                        email: email,
+                        role: "admin"
+                    };
+
+                    localStorage.setItem("adminLoggedIn", "true");
+
+                    localStorage.setItem(
+                        "smartLibCurrentUser",
+                        JSON.stringify(adminData)
+                    );
+
+                    if (rememberMe) {
+                        localStorage.setItem("smartLibRemember", "true");
+                    } else {
+                        localStorage.removeItem("smartLibRemember");
+                    }
+
+                    alert("Admin Login Successful!");
+
+                    window.location.href = "./admin-dashboard.html";
+
+                    return;
+
+                } else {
+
+                    alert("Invalid Admin Email or Password!");
+
+                    return;
+
+                }
+
+            }
+
+            // =================================
+            // STUDENT LOGIN - MONGODB API
+            // =================================
+
+            if (role === "student") {
+
+                const response = await fetch(
+                    "http://localhost:5000/api/students/login",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email: email,
+                            password: password
+                        })
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+
+                    alert(
+                        result.message || "Student Login Failed!"
+                    );
+
+                    return;
+
+                }
+
+                if (!result.data || !result.data._id) {
+
+                    alert("Invalid student information received!");
+
+                    return;
+
+                }
+
+                // Save student information
+                localStorage.setItem(
+                    "smartLibCurrentUser",
+                    JSON.stringify({
+                        ...result.data,
+                        role: "student"
+                    })
+                );
+
+                localStorage.setItem("studentLoggedIn", "true");
+
+                // Remember Me
+                if (rememberMe) {
+
+                    localStorage.setItem(
+                        "smartLibRemember",
+                        "true"
+                    );
+
+                } else {
+
+                    localStorage.removeItem("smartLibRemember");
+
+                }
+
+                alert("Student Login Successful!");
+
+                window.location.href = "./student-dashboard.html";
+
+                return;
+
+            }
+
+        } catch (error) {
+
+            console.error("Login Error:", error);
+
+            alert(
+                "Backend connection failed! Please start SmartLib backend."
+            );
+
+        } finally {
+
+            loginButton.disabled = false;
+            loginButton.textContent = "Login";
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+            <span>📚</span>
+            <h2>SmartLib</h2>
+        </div>
+
+        <div class="user-mini">
+            <div class="user-avatar">👨‍🎓</div>
+
+            <div>
+                <strong id="sidebarStudentName">Student</strong>
+                <small>Student</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="student-dashboard.html" class="sidebar-link active">
+                🏠 <span>Dashboard</span>
+            </a>
+
+            <a href="books.html" class="sidebar-link">
+                📚 <span>Browse Books</span>
+            </a>
+
+            <a href="my-books.html" class="sidebar-link">
+                📖 <span>My Books</span>
+            </a>
+
+            <a href="#history" class="sidebar-link">
+                🕘 <span>History</span>
+            </a>
+
+            <a href="#profile" class="sidebar-link">
+                👤 <span>My Profile</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#" class="sidebar-link" onclick="logoutUser(); return false;">
+                🚪 <span>Logout</span>
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- TOPBAR -->
+        <header class="dashboard-topbar">
+
+            <div>
+                <h1>Student Dashboard</h1>
+                <p>Welcome back! Here's your library overview.</p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <button class="notification-btn" type="button">
+                    🔔
+                </button>
+
+                <div class="profile-circle">👨‍🎓</div>
+
+            </div>
+
+        </header>
+
+
+        <!-- STATISTICS -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div>
+                    <span>Books Issued</span>
+                    <h2 id="issuedCount">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div>
+                    <span>Due Soon</span>
+                    <h2 id="dueCount">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div>
+                    <span>Total Fine</span>
+                    <h2 id="fineAmount">₹0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📖</div>
+                <div>
+                    <span>Books Read</span>
+                    <h2 id="historyCount">0</h2>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- DASHBOARD CONTENT -->
+        <section class="dashboard-grid">
+
+            <!-- CURRENTLY ISSUED BOOKS -->
+            <div class="dashboard-card large-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Currently Issued</h2>
+                        <p>Your active library books</p>
+                    </div>
+
+                    <a href="my-books.html">View All</a>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>Issue Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="issuedBooksTable">
+
+                            <tr>
+                                <td colspan="4" style="text-align:center;">
+                                    Loading your books...
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECOMMENDATIONS -->
+            <div class="dashboard-card">
+
+                <div class="card-header">
+                    <div>
+                        <h2>Recommended</h2>
+                        <p>Books you may like</p>
+                    </div>
+                </div>
+
+                <div class="recommended-book">
+
+                    <div class="book-cover">📘</div>
+
+                    <div>
+                        <h3>Data Structures</h3>
+                        <p>Computer Science</p>
+
+                        <a href="books.html">View Books →</a>
+                    </div>
+
+                </div>
+
+                <div class="recommended-book">
+
+                    <div class="book-cover">📕</div>
+
+                    <div>
+                        <h3>Operating Systems</h3>
+                        <p>Computer Science</p>
+
+                        <a href="books.html">View Books →</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUICK ACTIONS -->
+        <section class="quick-actions">
+
+            <h2>Quick Actions</h2>
+
+            <div class="action-grid">
+
+                <a href="books.html" class="action-card">
+                    <span>🔍</span>
+                    <h3>Find a Book</h3>
+                    <p>Search library collection</p>
+                </a>
+
+                <a href="my-books.html" class="action-card">
+                    <span>📖</span>
+                    <h3>My Books</h3>
+                    <p>Manage issued books</p>
+                </a>
+
+                <a href="#profile" class="action-card">
+                    <span>👤</span>
+                    <h3>My Profile</h3>
+                    <p>View your information</p>
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="js/js/js/js/app.js"></script>
+    <script src="js/js/js/js/student.js"></script>
+
+</body>
+</html>

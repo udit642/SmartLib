@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Browse Books - SmartLib</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+
+        /* ===============================
+           ADVANCED SEARCH
+        =============================== */
+
+        .advanced-search {
+            background: #ffffff;
+            padding: 22px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+        }
+
+        .advanced-search h2 {
+            margin-bottom: 18px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .search-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .search-field label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .search-field input,
+        .search-field select {
+            padding: 11px 13px;
+            border: 1px solid #d8dce8;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-field input:focus,
+        .search-field select:focus {
+            border-color: #4f46e5;
+        }
+
+        .search-buttons {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .reset-btn {
+            background: #eef0f5;
+            color: #333;
+            border: none;
+            padding: 11px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* ===============================
+           BOOK CARD
+        =============================== */
+
+        .dynamic-book-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid #e4e6ef;
+            transition: 0.25s;
+        }
+
+        .dynamic-book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+        }
+
+        .dynamic-book-image {
+            height: 220px;
+            background: #f2f3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+        }
+
+        .dynamic-book-info {
+            padding: 22px;
+        }
+
+        .dynamic-category {
+            display: inline-block;
+            background: #eef0ff;
+            color: #4f46e5;
+            padding: 6px 12px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .dynamic-book-info h3 {
+            margin: 15px 0 7px;
+            font-size: 20px;
+        }
+
+        .dynamic-book-info .author {
+            color: #777;
+            margin-bottom: 12px;
+        }
+
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .book-status {
+            margin-top: 12px;
+            font-weight: 700;
+        }
+
+        .book-status.available {
+            color: #16a34a;
+        }
+
+        .book-status.unavailable {
+            color: #dc2626;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 9px;
+            margin-top: 18px;
+        }
+
+        .view-btn,
+        .issue-btn {
+            flex: 1;
+            border: none;
+            padding: 11px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .view-btn {
+            background: #eef0ff;
+            color: #4f46e5;
+        }
+
+        .issue-btn {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .issue-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        /* ===============================
+           RESULT
+        =============================== */
+
+        .result-text {
+            margin: 15px 0;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .no-books {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+        }
+
+        /* ===============================
+           MODAL
+        =============================== */
+
+        .book-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .book-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 550px;
+            border-radius: 18px;
+            padding: 28px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 18px;
+            top: 14px;
+            border: none;
+            background: none;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .modal-book-icon {
+            font-size: 65px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 11px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            font-weight: 600;
+        }
+
+        .modal-description {
+            margin-top: 20px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .modal-issue-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: #4f46e5;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal-issue-btn:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        @media(max-width: 900px) {
+
+            .search-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-buttons {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <span>📚</span>
+
+        <h2>SmartLib</h2>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="student-dashboard.html"
+           class="sidebar-link">
+
+            🏠
+
+            <span>Dashboard</span>
+
+        </a>
+
+
+        <a href="books.html"
+           class="sidebar-link active">
+
+            📚
+
+            <span>Browse Books</span>
+
+        </a>
+
+
+        <a href="my-books.html"
+           class="sidebar-link">
+
+            📖
+
+            <span>My Books</span>
+
+        </a>
+
+
+        <a href="#history"
+           class="sidebar-link">
+
+            🕘
+
+            <span>History</span>
+
+        </a>
+
+
+        <a href="#profile"
+           class="sidebar-link">
+
+            👤
+
+            <span>Profile</span>
+
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="index.html"
+           class="sidebar-link">
+
+            🚪
+
+            <span>Logout</span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="dashboard-main">
+
+
+    <header class="dashboard-topbar">
+
+        <div>
+
+            <h1>Library Books</h1>
+
+            <p>
+                Explore and issue books from our collection.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- ADVANCED SEARCH -->
+
+    <section class="advanced-search">
+
+        <h2>🔍 Advanced Book Search</h2>
+
+
+        <div class="search-grid">
+
+            <div class="search-field">
+
+                <label>Book Name</label>
+
+                <input
+                    type="text"
+                    id="bookName"
+                    placeholder="Search book name..."
+                >
+
+            </div>
+
+
+            <div class="search-field">
+
+                <label>Author</label>
+
+                <input
+                    type="text"
+                    id="author"
+                    placeholder="Search author..."
+                >
+
+            </div>
+
+
+            <div class="search-field">
+
+                <label>Category</label>
+
+                <select id="category">
+
+                    <option value="all">
+                        All Categories
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="search-field">
+
+                <label>ISBN</label>
+
+                <input
+                    type="text"
+                    id="isbn"
+                    placeholder="Enter ISBN..."
+                >
+
+            </div>
+
+
+            <div class="search-field">
+
+                <label>Availability</label>
+
+                <select id="availability">
+
+                    <option value="all">
+                        All Books
+                    </option>
+
+                    <option value="available">
+                        Available
+                    </option>
+
+                    <option value="unavailable">
+                        Not Available
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="search-field">
+
+                <label>Publication Year</label>
+
+                <input
+                    type="number"
+                    id="year"
+                    placeholder="e.g. 2024"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="search-buttons">
+
+            <button
+                class="search-btn"
+                onclick="searchBooks()">
+
+                🔍 Search
+
+            </button>
+
+
+            <button
+                class="reset-btn"
+                onclick="resetSearch()">
+
+                ↻ Reset
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- BOOK COUNT -->
+
+    <div class="result-text">
+
+        <span id="bookCount">0</span>
+        books found
+
+    </div>
+
+
+    <!-- BOOKS -->
+
+    <section class="books-section">
+
+        <div
+            class="books-grid"
+            id="booksContainer">
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- VIEW DETAILS MODAL -->
+
+<div
+    class="book-modal"
+    id="bookModal">
+
+    <div class="modal-content">
+
+        <button
+            class="close-modal"
+            onclick="closeBookModal()">
+
+            ×
+
+        </button>
+
+
+        <div
+            class="modal-book-icon">
+
+            📖
+
+        </div>
+
+
+        <h2 id="modalTitle">
+            Book Details
+        </h2>
+
+
+        <div id="modalDetails"></div>
+
+
+        <button
+            id="modalIssueBtn"
+            class="modal-issue-btn">
+
+            📚 Issue Book
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- KEEP YOUR EXISTING PATH -->
+
+<script src="js/js/books.js"></script>
+
+<script src="js/js/app.js"></script>
+
+<script src="js/js/student.js"></script>
+
+
+</body>
+
+</html>
