@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    const API = "http://localhost:5000/api";
+    const API = "https://smartlib-7.onrender.com/api/students";
 
     const typeInput = document.getElementById("reportType");
     const startInput = document.getElementById("reportStartDate");
